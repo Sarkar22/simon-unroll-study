@@ -70,7 +70,8 @@ try:
         ax2=ax.twinx(); ax2.plot(U,[d['fmax'] for d in rows],"^--",color="green",label="Fmax")
         ax2.set_ylabel("Fmax (MHz)",color="green")
         h1,l1=ax.get_legend_handles_labels(); h2,l2=ax2.get_legend_handles_labels()
-        ax.legend(h1+h2,l1+l2,fontsize=8,loc="upper left"); save(fig,"fig_area")
+        ax.legend(h1+h2,l1+l2,fontsize=8,loc="lower center",bbox_to_anchor=(0.5,1.0),
+                  ncol=3,frameon=False); save(fig,"fig_area")
 
         fig,ax=plt.subplots(figsize=(4.3,3.0))
         ax.plot(U,[d['tput'] for d in rows],"o-",color="C3",label="throughput")
