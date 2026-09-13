@@ -12,8 +12,8 @@ Measured densely (U = 1,2,4,5,6,7,8,10,12,17,34,68) on KV260 post-P&R, the pictu
 
 Main result: the plateau (all points within a few percent of peak) spans U = 5..10, while
 LUT area nearly doubles across it. The design rule is therefore to take the SMALLEST U on
-the plateau. A coarse sweep that samples {1,2,4,17,...} misses the plateau entirely and
-reports a spurious optimum at U=4.
+the plateau. A sweep restricted to divisors of T, {1,2,4,17,34,68}, misses the plateau
+entirely and reports a spurious optimum at U=4.
 
 Outputs results/figures/fig_law.pdf and the numbers quoted in the paper.
 """
@@ -57,15 +57,18 @@ print(f"plateau (within {TOL*100:.0f}% of peak): U = {lo:.0f}..{hi:.0f}")
 print(f"  at U={lo:.0f}: {tput[i_lo]:.2f} Gb/s, {lut[i_lo]:.0f} LUT, {eff[i_lo]:.2f} Mbps/LUT")
 print(f"  at U={hi:.0f}: {tput[i_hi]:.2f} Gb/s, {lut[i_hi]:.0f} LUT, {eff[i_hi]:.2f} Mbps/LUT")
 print(f"  -> same throughput ({100*tput[i_hi]/tput[i_lo]:.1f}%) for {lut[i_hi]/lut[i_lo]:.2f}x the area")
-print(f"coarse-sweep artifact: sampling {{1,2,4,17,34,68}} reports peak at U=4 "
+print(f"divisor-only sweep {{1,2,4,17,34,68}} reports peak at U=4 "
       f"({tput[list(U).index(4)]:.2f} Gb/s), {100*(peak/tput[list(U).index(4)]-1):.0f}% below the true peak")
 print("\n  U    LUT   Fmax   cyc   Gb/s  Mbps/LUT")
 for i in range(len(U)):
     print(f"{U[i]:4.0f} {lut[i]:6.0f} {fmax[i]:6.1f} {cycles[i]:5.0f} {tput[i]:6.2f} {eff[i]:8.2f}")
 
 # ---------------------------------------------------------------- figure ------
-import matplotlib; matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+try:
+    import matplotlib; matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+except Exception:
+    print("\n(matplotlib unavailable; skipping the figure)"); raise SystemExit
 C_BLUE, C_ORANGE, INK, MUTED, GRID = "#2a78d6", "#eb6834", "#0b0b0b", "#898781", "#e1e0d9"
 plt.rcParams.update({"font.size": 7.5, "axes.edgecolor": "#c3c2b7", "axes.linewidth": 0.6,
                      "xtick.color": MUTED, "ytick.color": MUTED, "text.color": INK,
@@ -90,7 +93,7 @@ a2.set_title(f"Plateau at $U={lo:.0f}$–${hi:.0f}$, not a sharp peak", fontsize
 a2.annotate(f"plateau\n$U={lo:.0f}$–${hi:.0f}$", xy=((lo*hi)**0.5, peak*0.55),
             ha="center", fontsize=6.8, color="#52514e")
 a2.plot([4], [tput[list(U).index(4)]], "s", ms=5, mfc="none", mec=INK, mew=1.0, zorder=4)
-a2.annotate("coarse sweep\nstops here", xy=(4, tput[list(U).index(4)]),
+a2.annotate("divisor sweep\nstops here", xy=(4, tput[list(U).index(4)]),
             xytext=(1.25, 1.55), fontsize=6.4, color=INK,
             arrowprops=dict(arrowstyle="->", color=INK, lw=0.7))
 for s in ("top", "right"): a2.spines[s].set_visible(False)
