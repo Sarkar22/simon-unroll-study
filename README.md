@@ -2,8 +2,7 @@
 
 One SIMON block-cipher core whose round-unroll factor `U` sweeps the area/throughput trade-off, with an on-the-fly key schedule and zero DSP / zero BRAM. The study shows the throughput optimum is a **plateau**, not a peak.
 
-This is the artifact for a paper submitted to **IEEE CCECE 2027** (under review). Every
-number below is reproduced by the scripts in this repository.
+Every number below is reproduced by the scripts in this repository.
 
 ## Results
 
